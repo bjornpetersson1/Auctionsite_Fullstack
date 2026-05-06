@@ -6,6 +6,6 @@ namespace Auctionsite_Backend.Core.Interface
     public interface IJWTservice
     {
         string GenerateAccessToken(User user);
-        string GenerateRefreshToken(string accessToken);
+        Task<string> GenerateRefreshToken(User user);
     }
 }

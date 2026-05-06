@@ -82,6 +82,7 @@ namespace Auctionsite_Backend.Data.Repo
                             response.Email = user.Email;
                             response.Role = user.Role;
                             response.AccessToken = _jwtService.GenerateAccessToken(user);
+                            response.RefreshToken = await _jwtService.GenerateRefreshToken(user);
                             response.ResponseMessage = "Login successful";
                         }
                     }
