@@ -6,11 +6,16 @@ namespace Auctionsite_Backend.Core.Service
 {
     public class AuctionsService : IAuctionsService
     {
-        private readonly IAuctionsRepo _aucyionsRepo;
+        private readonly IAuctionsRepo _auctionsRepo;
 
-        public AuctionsService(IAuctionsRepo aucyionsRepo)
+        public AuctionsService(IAuctionsRepo auctionsRepo)
         {
-            _aucyionsRepo = aucyionsRepo;
+            _auctionsRepo = auctionsRepo;
+        }
+        public async Task<AuctionListDTO> GetAuctionsList()
+        {
+            var response = await _auctionsRepo.GetAuctionsList();
+            return response;
         }
 
         public Task<CreateNewAuctionResponseDTO> CreateNewAuction()
@@ -33,9 +38,5 @@ namespace Auctionsite_Backend.Core.Service
             throw new NotImplementedException();
         }
 
-        public Task<AuctionListDTO> GetAuctionsList()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

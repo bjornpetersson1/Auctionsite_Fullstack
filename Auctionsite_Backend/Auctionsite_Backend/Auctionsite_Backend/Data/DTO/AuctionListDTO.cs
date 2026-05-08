@@ -2,6 +2,6 @@
 {
     public class AuctionListDTO
     {
-        public List<AuctionDTO> Auctions { get; set; }
+        public List<AuctionDTO> Auctions { get; set; } = new List<AuctionDTO>();
     }
 }

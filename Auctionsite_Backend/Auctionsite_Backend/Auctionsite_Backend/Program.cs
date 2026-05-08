@@ -18,6 +18,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAuthRepo, AuthRepo>();
 builder.Services.AddScoped<IJWTservice, JWTservice>();
 builder.Services.AddScoped<IJWTRepo, JWTrepo>();
+builder.Services.AddScoped<IAuctionsService, AuctionsService>();
+builder.Services.AddScoped<IAuctionsRepo, AuctionRepo>();
 
 builder.Services.AddAuthentication("Bearer")
      .AddJwtBearer(options =>

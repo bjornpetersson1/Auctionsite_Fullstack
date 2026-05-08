@@ -19,7 +19,8 @@ namespace Auctionsite_Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAuctionsList()
         {
-            return Ok();
+            var response = await _auctionsService.GetAuctionsList();
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
