@@ -13,6 +13,8 @@ namespace Auctionsite_Backend.Models
         public string? ImageUrl { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime EditedAt { get; set; }
         public List<Bid>? Bids { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
