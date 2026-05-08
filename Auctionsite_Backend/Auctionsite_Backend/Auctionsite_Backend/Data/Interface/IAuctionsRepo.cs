@@ -8,6 +8,6 @@ namespace Auctionsite_Backend.Data.Interface
         Task<AuctionDTO?> GetAuctionById(int id);
         Task<CreateNewAuctionResponseDTO> CreateNewAuction(CreateNewAuctionDTO auction, int userId);
         Task<EditAuctionResponseDTO> EditAuction(EditAuctionDTO auction);
-        Task<DeleteAuctionResponseDTO> DeleteAuction(int id);
+        Task<DeleteAuctionResponseDTO> DeleteAuction(DeleteAuctionDTO auction);
     }
 }

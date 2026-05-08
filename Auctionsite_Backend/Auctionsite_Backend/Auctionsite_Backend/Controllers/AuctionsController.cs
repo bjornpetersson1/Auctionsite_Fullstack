@@ -61,11 +61,27 @@ namespace Auctionsite_Backend.Controllers
         }
 
         [Authorize("UserOrAdmin")]
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteAuction([FromBody] DeleteAuctionDTO auction)
         {
-            //admin eller ägaren av auctionen kan deleta
-            return Ok();
+            var userId = GetUserIdFromJWT();
+            if (userId == 0) return BadRequest("No user found");
+            var userRole = User.FindFirstValue(ClaimTypes.Role);
+
+            if (userRole == "admin" || userId == auction.CreaterId)
+            {
+                var response = await _auctionsService.DeleteAuction(auction);
+                if(response.IsDeleted)
+                {
+                    return Ok(response.Message);
+                }
+                else
+                {
+                    return NotFound(response.Message);
+                }
+            }
+            else return BadRequest("You are not authorized to delete this auction");
+
         }
 
         private int GetUserIdFromJWT()

@@ -129,9 +129,28 @@ namespace Auctionsite_Backend.Data.Repo
         }
 
 
-        public Task<DeleteAuctionResponseDTO> DeleteAuction(int id)
+        public async Task<DeleteAuctionResponseDTO> DeleteAuction(DeleteAuctionDTO auction)
         {
-            throw new NotImplementedException();
+            var selectedAuction = await _dbContext.Auctions.FirstOrDefaultAsync(a => a.Id == auction.AuctionID);
+            if (selectedAuction == null)
+            {
+                return new DeleteAuctionResponseDTO
+                {
+                    Message = "Auction not found",
+                    IsDeleted = false
+                };
+            }
+            else
+            {
+                _dbContext.Auctions.Remove(selectedAuction);
+                await _dbContext.SaveChangesAsync();
+                return new DeleteAuctionResponseDTO
+                {
+                    Message = "success",
+                    IsDeleted = true
+                };
+            }
+
         }
 
 
