@@ -28,16 +28,17 @@ namespace Auctionsite_Backend.Core.Service
             var response = await _auctionsRepo.CreateNewAuction(auction, userId);
             return response;
         }
+        public async Task<EditAuctionResponseDTO> EditAuction(EditAuctionDTO auction)
+        {
+            var response = await _auctionsRepo.EditAuction(auction);
+            return response;
+        }
 
         public Task<DeleteAuctionResponseDTO> DeleteAuction(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<EditAuctionResponseDTO> EditAuction(int id)
-        {
-            throw new NotImplementedException();
-        }
 
 
     }

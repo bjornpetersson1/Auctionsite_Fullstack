@@ -37,28 +37,42 @@ namespace Auctionsite_Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateNewAuction([FromBody] CreateNewAuctionDTO auction)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null) return BadRequest("No user found");
-            var intUserId = int.Parse(userId);
-            var response = await _auctionsService.CreateNewAuction(auction, intUserId);
+            var userId = GetUserIdFromJWT();
+            if (userId == 0) return BadRequest("No user found");
+            var response = await _auctionsService.CreateNewAuction(auction, userId);
             if (response.Message != "success") return BadRequest(response.Message);
             return Ok(response);
         }
 
         [Authorize("UserOrAdmin")]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditAuction(int id)
+        [HttpPut]
+        public async Task<IActionResult> EditAuction([FromBody] EditAuctionDTO auction)
         {
-            //admin eller ägaren av auctionen kan edita
-            return Ok();
+            var userId = GetUserIdFromJWT();
+            if (userId == 0) return BadRequest("No user found");
+            var userRole = User.FindFirstValue(ClaimTypes.Role);
+
+            if (userRole == "admin" || userId == auction.AuctionCreaterId)
+            {
+                var response = await _auctionsService.EditAuction(auction);
+                return Ok(response);
+            }
+            else return BadRequest("You are not authorized to edit this auction");
         }
 
         [Authorize("UserOrAdmin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAuction(int id)
+        public async Task<IActionResult> DeleteAuction([FromBody] DeleteAuctionDTO auction)
         {
             //admin eller ägaren av auctionen kan deleta
             return Ok();
+        }
+
+        private int GetUserIdFromJWT()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return 0;
+            else return int.Parse(userId);
         }
     }
 }

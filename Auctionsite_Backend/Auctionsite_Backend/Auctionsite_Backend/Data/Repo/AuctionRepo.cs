@@ -96,13 +96,40 @@ namespace Auctionsite_Backend.Data.Repo
                 };
             }
         }
-
-        public Task<DeleteAuctionResponseDTO> DeleteAuction(int id)
+        public async Task<EditAuctionResponseDTO> EditAuction(EditAuctionDTO auction)
         {
-            throw new NotImplementedException();
+            var original = await _dbContext.Auctions.FirstOrDefaultAsync(a => a.Id == auction.Id);
+            if(original == null)
+            {
+                return new EditAuctionResponseDTO { Message = "Auction not found" };
+            }
+            
+            original.Title = auction.Title;
+            original.Description = auction.Description;
+            original.AskingPrice = auction.AskingPrice;
+            original.ImageUrl = auction.ImageUrl;
+            original.StartDateTime = auction.StartDateTime;
+            original.EndDateTime = auction.EndDateTime;
+            original.EditedAt = DateTime.UtcNow;
+
+            var rowsSaved = await _dbContext.SaveChangesAsync();
+            if (rowsSaved > 0)
+            {
+                return new EditAuctionResponseDTO
+                {
+                    Message = "success",
+                    EditedAt = original.EditedAt
+                };
+            }
+            else
+            {
+                return new EditAuctionResponseDTO
+                { Message = "Something went wrong" };
+            }
         }
 
-        public Task<EditAuctionResponseDTO> EditAuction(int id)
+
+        public Task<DeleteAuctionResponseDTO> DeleteAuction(int id)
         {
             throw new NotImplementedException();
         }
