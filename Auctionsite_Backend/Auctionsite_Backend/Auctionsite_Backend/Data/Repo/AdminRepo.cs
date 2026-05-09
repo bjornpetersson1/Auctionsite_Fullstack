@@ -36,12 +36,29 @@ namespace Auctionsite_Backend.Data.Repo
             }
         }
 
-        public Task<ReDeActivateUserResponseDTO?> DeactivateUser(int id)
+        public async Task<ReDeActivateAuctionResponseDTO?> ReactivateAuction(int id)
         {
-            throw new NotImplementedException();
+            var response = await _dbContext.Auctions.FirstOrDefaultAsync(a => a.Id == id);
+            if (response == null) return null;
+            else
+            {
+                response.IsActive = true;
+                await _dbContext.SaveChangesAsync();
+                return new ReDeActivateAuctionResponseDTO()
+                {
+                    Id = response.Id,
+                    IsActive = response.IsActive,
+                    Title = response.Title,
+                    Description = response.Description,
+                    AuctionCreaterId = response.UserId,
+                    AskingPrice = response.AskingPrice,
+                    ImageUrl = response.ImageUrl,
+                    StartDateTime = response.StartDateTime,
+                    EndDateTime = response.EndDateTime,
+                };
+            }
         }
-
-        public Task<ReDeActivateAuctionResponseDTO?> ReactivateAuction(int id)
+        public async Task<ReDeActivateUserResponseDTO?> DeactivateUser(int id)
         {
             throw new NotImplementedException();
         }

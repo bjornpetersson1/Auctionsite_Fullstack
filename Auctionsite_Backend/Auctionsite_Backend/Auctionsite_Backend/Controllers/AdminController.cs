@@ -34,7 +34,15 @@ namespace Auctionsite_Backend.Controllers
         [HttpPatch("auctions/{id}/reactivate")]
         public async Task<IActionResult> ReactivateAuction(int id)
         {
-            return Ok();
+            var response = await _adminService.ReactivateAuction(id);
+            if (response == null)
+            {
+                return NotFound("Auction not found");
+            }
+            else
+            {
+                return Ok(response);
+            }
         }
 
         [HttpPut("users/{id}/deactivate")]

@@ -18,16 +18,18 @@ namespace Auctionsite_Backend.Core.Service
             var response = _adminRepo.DeactivateAuction(id);
             return response;
         }
+        public Task<ReDeActivateAuctionResponseDTO?> ReactivateAuction(int id)
+        {
+            var response =  _adminRepo.ReactivateAuction(id);
+            return response;
+        }
 
         public Task<ReDeActivateUserResponseDTO?> DeactivateUser(int id)
         {
-            throw new NotImplementedException();
+            var response = _adminRepo.ReactivateUser(id);
+            return response;
         }
 
-        public Task<ReDeActivateAuctionResponseDTO?> ReactivateAuction(int id)
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<ReDeActivateUserResponseDTO?> ReactivateUser(int id)
         {
