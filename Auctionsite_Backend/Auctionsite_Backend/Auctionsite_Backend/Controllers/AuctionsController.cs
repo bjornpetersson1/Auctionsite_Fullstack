@@ -98,6 +98,9 @@ namespace Auctionsite_Backend.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteAuction([FromBody] DeleteAuctionDTO auction)
         {
+            var isActive = IsUserActive();
+            if (!isActive) return BadRequest("User inactivated");
+            //FORTSÄTT MED INAKTIVERINGen
             var userId = GetUserIdFromJWT();
             if (userId == 0) return BadRequest("No user found");
             var userRole = User.FindFirstValue(ClaimTypes.Role);
@@ -123,6 +126,13 @@ namespace Auctionsite_Backend.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null) return 0;
             else return int.Parse(userId);
+        }
+
+        private bool IsUserActive()
+        {
+            var userActive = User.FindFirstValue("IsActive");
+            if (userActive == "true") return true;
+            else return false;
         }
     }
 }

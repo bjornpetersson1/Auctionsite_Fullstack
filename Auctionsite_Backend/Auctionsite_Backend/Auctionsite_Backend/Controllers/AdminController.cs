@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Auctionsite_Backend.Controllers
 {
@@ -48,6 +49,9 @@ namespace Auctionsite_Backend.Controllers
         [HttpPatch("users/{id}/deactivate")]
         public async Task<IActionResult> DeactivateUser(int id)
         {
+            var userId = GetUserIdFromJWT();
+            if (userId == id) return BadRequest("You can't deactivate your own account");
+
             var response = await _adminService.DeactivateUser(id);
             if (response == null)
             {
@@ -71,6 +75,12 @@ namespace Auctionsite_Backend.Controllers
             {
                 return Ok(response);
             }
+        }
+        private int GetUserIdFromJWT()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return 0;
+            else return int.Parse(userId);
         }
     }
 }
