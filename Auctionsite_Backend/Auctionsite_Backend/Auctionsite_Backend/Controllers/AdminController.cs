@@ -1,4 +1,5 @@
 ﻿using Auctionsite_Backend.Core.Interface;
+using Auctionsite_Backend.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ namespace Auctionsite_Backend.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize("AdminOnly")]
+    [RequireActiveUser]
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminService;

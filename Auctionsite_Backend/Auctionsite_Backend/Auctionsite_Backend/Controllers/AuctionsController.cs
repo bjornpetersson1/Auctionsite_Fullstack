@@ -1,5 +1,6 @@
 ﻿using Auctionsite_Backend.Core.Interface;
 using Auctionsite_Backend.Data.DTO;
+using Auctionsite_Backend.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,7 @@ namespace Auctionsite_Backend.Controllers
         }
 
         [Authorize("UserOnly")]
+        [RequireActiveUser]
         [HttpPost("{auctionId}/bids")]
         public async Task<IActionResult> PlaceBidOnAuction(int auctionId, float amount)
         {
@@ -68,6 +70,7 @@ namespace Auctionsite_Backend.Controllers
         }
 
         [Authorize("UserOrAdmin")]
+        [RequireActiveUser]
         [HttpPost]
         public async Task<IActionResult> CreateNewAuction([FromBody] CreateNewAuctionDTO auction)
         {
@@ -79,6 +82,7 @@ namespace Auctionsite_Backend.Controllers
         }
 
         [Authorize("UserOrAdmin")]
+        [RequireActiveUser]
         [HttpPut]
         public async Task<IActionResult> EditAuction([FromBody] EditAuctionDTO auction)
         {
@@ -95,12 +99,10 @@ namespace Auctionsite_Backend.Controllers
         }
 
         [Authorize("UserOrAdmin")]
+        [RequireActiveUser]
         [HttpDelete]
         public async Task<IActionResult> DeleteAuction([FromBody] DeleteAuctionDTO auction)
         {
-            var isActive = IsUserActive();
-            if (!isActive) return BadRequest("User inactivated");
-            //FORTSÄTT MED INAKTIVERINGen
             var userId = GetUserIdFromJWT();
             if (userId == 0) return BadRequest("No user found");
             var userRole = User.FindFirstValue(ClaimTypes.Role);
@@ -126,13 +128,6 @@ namespace Auctionsite_Backend.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null) return 0;
             else return int.Parse(userId);
-        }
-
-        private bool IsUserActive()
-        {
-            var userActive = User.FindFirstValue("IsActive");
-            if (userActive == "true") return true;
-            else return false;
         }
     }
 }
