@@ -23,6 +23,15 @@ builder.Services.AddScoped<IAuctionsRepo, AuctionRepo>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IAdminRepo, AdminRepo>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAny", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddAuthentication("Bearer")
      .AddJwtBearer(options =>
@@ -43,6 +52,8 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
+
+app.UseCors("AllowAny");
 
 using (var scope = app.Services.CreateScope())
 {

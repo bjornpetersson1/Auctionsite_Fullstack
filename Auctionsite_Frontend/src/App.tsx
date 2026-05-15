@@ -7,12 +7,12 @@ import { Login } from "./views/login";
 import { AuctionCreate } from "./views/auction-create";
 import { Register } from "./views/register";
 import { AdminPage } from "./views/admin";
-import { Authprovider } from "./context/auth-context";
+import { AuthProvider } from "./context/auth-context";
 
 function App() {
   return (
     <>
-      <Authprovider>
+      <AuthProvider>
         <Navbar />
         <Routes>
           <Route path="/" element={<AuctionsList />} />
@@ -22,7 +22,7 @@ function App() {
           <Route path="/create-auction" element={<AuctionCreate />} />
           <Route path="/admin" element={<AdminPage />} />
         </Routes>
-      </Authprovider>
+      </AuthProvider>
     </>
   );
 }
