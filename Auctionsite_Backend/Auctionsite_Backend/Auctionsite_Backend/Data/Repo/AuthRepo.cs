@@ -3,6 +3,7 @@ using Auctionsite_Backend.Data.DTO;
 using Auctionsite_Backend.Data.Interface;
 using Auctionsite_Backend.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using BC = BCrypt.Net.BCrypt;
 
 namespace Auctionsite_Backend.Data.Repo
@@ -79,6 +80,7 @@ namespace Auctionsite_Backend.Data.Repo
                         {
                             response.LoginSuccess = true;
                             response.Id = user.Id;
+                            response.Name = user.Name;
                             response.Email = user.Email;
                             response.Role = user.Role;
                             response.AccessToken = _jwtService.GenerateAccessToken(user);

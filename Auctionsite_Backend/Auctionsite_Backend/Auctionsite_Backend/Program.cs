@@ -4,6 +4,7 @@ using Auctionsite_Backend.Data;
 using Auctionsite_Backend.Data.Interface;
 using Auctionsite_Backend.Data.Repo;
 using Auctionsite_Backend.Data.Seeders;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -23,6 +24,16 @@ builder.Services.AddScoped<IAuctionsRepo, AuctionRepo>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IAdminRepo, AdminRepo>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAny", policy =>
+    {
+        policy.WithOrigins("https://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 builder.Services.AddAuthentication("Bearer")
      .AddJwtBearer(options =>
@@ -34,6 +45,14 @@ builder.Services.AddAuthentication("Bearer")
              ValidateIssuer = false,
              ValidateAudience = false
          };
+         options.Events = new JwtBearerEvents
+         {
+             OnMessageReceived = ctx =>
+             {
+                 ctx.Token = ctx.Request.Cookies["accessToken"];
+                 return Task.CompletedTask;
+             }
+         };
      });
 builder.Services.AddAuthorization(options =>
 {
@@ -43,6 +62,8 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
+
+app.UseCors("AllowAny");
 
 using (var scope = app.Services.CreateScope())
 {

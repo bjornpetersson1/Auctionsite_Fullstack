@@ -3,6 +3,7 @@ using Auctionsite_Backend.Data.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Auctionsite_Backend.Controllers
 {
@@ -37,9 +38,32 @@ namespace Auctionsite_Backend.Controllers
             var response = await _authService.Login(loginRequestDTO);
             if (response.LoginSuccess)
             {
-                return Ok(new {message = response.ResponseMessage, accessToken = response.AccessToken, refreshToken = response.RefreshToken, email = response.Email});
+                Response.Cookies.Append("accessToken", response.AccessToken, new CookieOptions
+                  {
+                      HttpOnly = true,
+                      Secure = true,
+                      SameSite = SameSiteMode.Strict,
+                      Expires =
+                  DateTimeOffset.UtcNow.AddMinutes(4)
+                  });
+                return Ok(response);
             }
             else return BadRequest(response.ResponseMessage);
+        }
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult Me()
+        {
+            var me = new GetMeDTO();
+            me.UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            me.Email = User.FindFirst(ClaimTypes.Email)?.Value;
+            me.Role = User.FindFirst(ClaimTypes.Role)?.Value;
+            me.Name = User.FindFirst(ClaimTypes.Name)?.Value;
+            if(me.Name == null)
+            {
+                return BadRequest();
+            }
+            return Ok(me);
         }
 
         [Authorize("AdminOnly")]
