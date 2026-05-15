@@ -8,6 +8,7 @@ import { AuctionCreate } from "./views/auction-create";
 import { Register } from "./views/register";
 import { AdminPage } from "./views/admin";
 import { AuthProvider } from "./context/auth-context";
+import { AdminRoute, ProtectedRoute } from "./components/protected-routes";
 
 function App() {
   return (
@@ -19,8 +20,12 @@ function App() {
           <Route path="/auctions/:id" element={<AuctionDetails />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/create-auction" element={<AuctionCreate />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/create-auction" element={<AuctionCreate />} />
+          </Route>
+          <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<AdminPage />} />
+          </Route>
         </Routes>
       </AuthProvider>
     </>
