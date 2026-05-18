@@ -7,11 +7,7 @@ import {
 } from "../api/auctionAPI";
 import { useAuth } from "../context/auth-context";
 import type { Auction, Bid } from "../types/auctionTypes";
-import {
-  formatDateTime,
-  formatMsToDate,
-  formatString,
-} from "../helpers/auction-helpers";
+import { formatDateTime, formatMsToDate } from "../helpers/auction-helpers";
 import "./auction-details.css";
 
 export const AuctionDetails = () => {
