@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./form.css";
 import { registerAuction } from "../api/auctionAPI";
 import type { NewAuctionPayload } from "../types/auctionTypes";
+import { useNavigate } from "react-router-dom";
 
 export const AuctionCreate = () => {
   const [title, setTitle] = useState("");
@@ -11,6 +12,7 @@ export const AuctionCreate = () => {
   const [startDateTime, setStartDateTime] = useState("");
   const [endDateTime, setEndDateTime] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const submitAuction = async () => {
     if (
@@ -30,11 +32,12 @@ export const AuctionCreate = () => {
         description,
         askingPrice,
         imageUrl,
-        startDateTime,
-        endDateTime,
+        startDateTime: new Date(startDateTime).toISOString(),
+        endDateTime: new Date(endDateTime).toISOString(),
       };
       await registerAuction(auction);
       setError(null);
+      navigate("/");
     } catch {
       setError("Något gick fel");
     }
